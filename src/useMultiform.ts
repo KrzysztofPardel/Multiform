@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 
 export const useMultiform = (steps: ReactElement[]) => {
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -22,6 +22,8 @@ export const useMultiform = (steps: ReactElement[]) => {
 		currentStepIndex,
 		step: steps[currentStepIndex],
 		steps,
+		isFirstStep: currentStepIndex === 0,
+		isLastStep: currentStepIndex === steps.length - 1,
 		goTo,
 		next,
 		back,

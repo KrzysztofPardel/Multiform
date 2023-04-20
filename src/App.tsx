@@ -1,7 +1,10 @@
 import { useMultiform } from './useMultiform';
 
 const App = () => {
-	const { steps, currentStepIndex } = useMultiform([<div className=''>One</div>, <div className=''>Two</div>]);
+	const { steps, currentStepIndex, step, isFirstStep, back, next, isLastStep } = useMultiform([
+		<div>One</div>,
+		<div>Two</div>,
+	]);
 	return (
 		<>
 			<div
@@ -18,6 +21,25 @@ const App = () => {
 				<form action='' className=''>
 					<div className='' style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
 						{currentStepIndex + 1}/{steps.length}
+					</div>
+					{step}
+					<div
+						style={{
+							marginTop: '1rem',
+							display: 'flex',
+							gap: '0.5rem',
+							justifyContent: 'flex-end',
+						}}>
+						{/* //Logic that prevents this button from being shown on the first page */}
+						{!isFirstStep && (
+							<button type='button' onClick={back}>
+								Back
+							</button>
+						)}
+						{/* //Logic that prevents me from seeing this button on the last page */}
+						<button type='button' onClick={next}>
+							{isLastStep ? 'Finish' : 'Next'}
+						</button>
 					</div>
 				</form>
 			</div>
