@@ -1,10 +1,50 @@
+import { useState } from 'react';
+import { FormEvent } from 'react';
+import { AccountForm } from './AccountForm';
+import { AddressForm } from './AddressForm';
+import { UserForm } from './UserForm';
 import { useMultiform } from './useMultiform';
-
+type FormData = {
+	firstName: string;
+	lastName: string;
+	age: string;
+	street: string;
+	city: string;
+	state: string;
+	zip: string;
+	email: string;
+	password: string;
+};
+const INITIAL_DATA: FormData = {
+	firstName: '',
+	lastName: '',
+	age: '',
+	street: '',
+	city: '',
+	state: '',
+	zip: '',
+	email: '',
+	password: '',
+};
 const App = () => {
+	const [data, setData] = useState(INITIAL_DATA);
+
+	const updateFields = (fields: Partial<FormData>) => {
+		setData((prev) => {
+			return { ...prev, ...fields };
+		});
+	};
+
 	const { steps, currentStepIndex, step, isFirstStep, back, next, isLastStep } = useMultiform([
-		<div>One</div>,
-		<div>Two</div>,
+		<UserForm {...data} updateFields={updateFields} />,
+		<AddressForm {...data} updateFields={updateFields} />,
+		<AccountForm {...data} updateFields={updateFields} />,
 	]);
+	const onSubmit = (e: FormEvent) => {
+		e.preventDefault();
+		if (!isLastStep) return next();
+		alert('Successful Account Creation');
+	};
 	return (
 		<>
 			<div
@@ -17,8 +57,9 @@ const App = () => {
 					margin: '1rem',
 					borderRadius: '1.5rem',
 					fontFamily: 'Arial',
+					maxWidth: 'max-content',
 				}}>
-				<form action='' className=''>
+				<form onSubmit={onSubmit}>
 					<div className='' style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
 						{currentStepIndex + 1}/{steps.length}
 					</div>
@@ -37,9 +78,7 @@ const App = () => {
 							</button>
 						)}
 						{/* //Logic that prevents me from seeing this button on the last page */}
-						<button type='button' onClick={next}>
-							{isLastStep ? 'Finish' : 'Next'}
-						</button>
+						<button type='submit'>{isLastStep ? 'Finish' : 'Next'}</button>
 					</div>
 				</form>
 			</div>
